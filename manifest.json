@@ -1,9 +1,9 @@
 {
-  "id": "./tongjian",
+  "id": "./",
   "name": "观鉴 · 资治通鉴学习",
   "short_name": "观鉴",
   "description": "以事件、原文、司马光评价、地图和决策复盘学习《资治通鉴》。",
-  "start_url": "./tongjian",
+  "start_url": "./",
   "scope": "./",
   "lang": "zh-Hans",
   "display": "standalone",
@@ -27,23 +27,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "继续读史",
-      "short_name": "读史",
-      "url": "./tongjian"
-    },
-    {
-      "name": "问一件事",
-      "short_name": "问事",
-      "url": "./consult"
-    },
-    {
-      "name": "查看笔记",
-      "short_name": "笔记",
-      "url": "./notes"
     }
   ]
 }
