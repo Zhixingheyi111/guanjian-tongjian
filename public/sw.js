@@ -1,19 +1,34 @@
-const CACHE_NAME = 'guanjian-app-v1';
+const CACHE_NAME = 'guanjian-app-v2';
 
 function scopedUrl(path) {
   return new URL(path, self.registration.scope).toString();
 }
 
-const APP_SHELL = [
-  scopedUrl('./'),
+const STATIC_SHELL = [
   scopedUrl('./manifest.json'),
   scopedUrl('./icon-192.png'),
   scopedUrl('./icon-512.png'),
   scopedUrl('./apple-touch-icon.png'),
 ];
 
+async function cacheApplication() {
+  const cache = await caches.open(CACHE_NAME);
+  const shellUrl = scopedUrl('./');
+  const shellResponse = await fetch(shellUrl, { cache: 'reload' });
+
+  if (!shellResponse.ok) throw new Error('app-shell-unavailable');
+
+  await cache.put(shellUrl, shellResponse.clone());
+  const html = await shellResponse.text();
+  const bundledAssets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css))"/g)]
+    .map((match) => new URL(match[1], shellUrl).toString())
+    .filter((url) => new URL(url).origin === self.location.origin);
+
+  await cache.addAll([...STATIC_SHELL, ...bundledAssets]);
+}
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+  event.waitUntil(cacheApplication());
   self.skipWaiting();
 });
 
@@ -35,8 +50,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(scopedUrl('./'), copy));
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(scopedUrl('./'), copy));
+          }
           return response;
         })
         .catch(() => caches.match(scopedUrl('./'))),
