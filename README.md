@@ -6,9 +6,11 @@
 
 ## 在线学习
 
-公开版：[观鉴 · 资治通鉴学习](https://zhixingheyi111.github.io/guanjian-tongjian/)
+Cloudflare 主站：[观鉴 · 资治通鉴学习](https://guanjian-tongjian.pages.dev/)
 
-GitHub Pages 目前作为公开备用站。Cloudflare Pages 镜像使用同一份代码与本地地图资源，完成账号授权后会发布到 `guanjian.pages.dev`，再视中国大陆实测结果决定是否接入独立域名和境内备案部署。
+GitHub Pages 备用站：[观鉴 · GitHub Pages](https://zhixingheyi111.github.io/guanjian-tongjian/)
+
+两个站点使用同一份代码与本地地图资源。Cloudflare Pages 会在 `main` 更新后自动发布；再视中国大陆实测结果决定是否接入独立域名和境内备案部署。
 
 - iPhone / iPad：用 Safari 打开，点“分享”后选择“添加到主屏幕”。
 - Android：用 Chrome 打开菜单，选择“安装应用”或“添加到主屏幕”。
@@ -80,7 +82,7 @@ npm run build:pages
 
 Cloudflare Pages 项目使用以下设置：
 
-- 项目名：`guanjian`
+- 项目名：`guanjian-tongjian`
 - 生产分支：`main`
 - 构建命令：`npm run build:cloudflare`
 - 输出目录：`dist`

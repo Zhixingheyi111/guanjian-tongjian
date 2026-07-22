@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:cloudflare": "VITE_STATIC_DEPLOYMENT=true vite build",
     "build:pages": "GITHUB_PAGES=true VITE_STATIC_DEPLOYMENT=true vite build && node scripts/prepare-pages.mjs",
-    "deploy:cloudflare": "npm run build:cloudflare && npx wrangler pages deploy dist --project-name=guanjian",
+    "deploy:cloudflare": "npm run build:cloudflare && npx wrangler pages deploy dist --project-name=guanjian-tongjian",
     "lint": "eslint .",
     "preview": "vite preview",
     "audit:sources": "node scripts/audit-volume-sources.mjs",
