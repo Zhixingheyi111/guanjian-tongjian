@@ -8,6 +8,8 @@
 
 公开版：[观鉴 · 资治通鉴学习](https://zhixingheyi111.github.io/guanjian-tongjian/)
 
+GitHub Pages 目前作为公开备用站。Cloudflare Pages 镜像使用同一份代码与本地地图资源，完成账号授权后会发布到 `guanjian.pages.dev`，再视中国大陆实测结果决定是否接入独立域名和境内备案部署。
+
 - iPhone / iPad：用 Safari 打开，点“分享”后选择“添加到主屏幕”。
 - Android：用 Chrome 打开菜单，选择“安装应用”或“添加到主屏幕”。
 - 阅读进度、理解检查、收藏和笔记保存在当前设备的浏览器中。
@@ -61,6 +63,35 @@ npm run dev
 npm run validate:data
 npm run lint
 npm run build
+npm run build:cloudflare
+```
+
+## 部署
+
+### GitHub Pages
+
+```bash
+npm run build:pages
+```
+
+该构建使用 `/guanjian-tongjian/` 子路径，并生成 GitHub Pages 所需的 `404.html`。
+
+### Cloudflare Pages
+
+Cloudflare Pages 项目使用以下设置：
+
+- 项目名：`guanjian`
+- 生产分支：`main`
+- 构建命令：`npm run build:cloudflare`
+- 输出目录：`dist`
+- Node.js：22
+
+`public/_redirects` 保证直接打开时代、故事和卷详情时仍进入 React Router；`public/_headers` 让 Service Worker 及时更新，同时长期缓存带哈希的静态资源。
+
+完成 Wrangler 登录后也可以从本机直接发布：
+
+```bash
+npm run deploy:cloudflare
 ```
 
 ## 可选 AI
