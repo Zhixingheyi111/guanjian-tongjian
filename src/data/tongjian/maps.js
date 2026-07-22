@@ -4,6 +4,8 @@ import {
   spineMaps,
 } from './content/index.js';
 
+const publicBaseUrl = typeof import.meta.env === 'object' ? import.meta.env.BASE_URL : '/';
+
 export const maps = [
   {
     id: 'warring-states-260-bce',
@@ -13,8 +15,7 @@ export const maps = [
     validFrom: -280,
     validTo: -240,
     precision: 'context-only',
-    imageUrl:
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/EN-WarringStatesAll260BCE.jpg',
+    imageUrl: `${publicBaseUrl}maps/warring-states-260-bce.jpg`,
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:EN-WarringStatesAll260BCE.jpg',
     author: 'Philg88',
     license: 'CC BY-SA 3.0 / GFDL',
