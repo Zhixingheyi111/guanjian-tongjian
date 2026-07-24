@@ -42,7 +42,7 @@ import {
   saveLessonNote,
   toggleLessonBookmark,
 } from '../utils/storage';
-import NoteEditor from './NoteEditor';
+import FollowNote from './FollowNote';
 import SelectionPopover from './SelectionPopover';
 import { BackButton, Tag } from './ui';
 
@@ -161,7 +161,8 @@ export default function StoryLesson({ onOpenVolume }) {
   };
 
   return (
-    <div className="story-lesson">
+    <div className="reading-layout reading-layout--story">
+      <div className="story-lesson">
       <BackButton onClick={() => navigate(-1)}>返回</BackButton>
       <SelectionPopover selection={selection} label="摘录到笔记" onSelect={appendQuote} />
 
@@ -294,20 +295,6 @@ export default function StoryLesson({ onOpenVolume }) {
         </div>
       </section>
 
-      <section id="lesson-notes" className="lesson-notes">
-        <header className="lesson-section-title">
-          <span>四</span>
-          <div><h3>留下你的理解</h3><p>可选中上面的原文摘录，也可以直接写下这一课真正改变了你的哪一个判断。</p></div>
-        </header>
-        <NoteEditor
-          key={`${lesson.id}-${noteSeed}`}
-          initialValue={getLessonNote(lesson.id, lesson.eventIds)}
-          onSave={(note) => saveLessonNote(lesson.id, note)}
-          placeholder="例如：我有没有把别人的暂时退让误当成真正认同？"
-          minHeight={160}
-        />
-      </section>
-
       <footer className="lesson-footer">
         <button type="button" className={completed ? 'complete-button is-complete' : 'complete-button'} onClick={toggleComplete}>
           <CheckCircle2 size={18} aria-hidden="true" />
@@ -326,6 +313,17 @@ export default function StoryLesson({ onOpenVolume }) {
           )}
         </div>
       </footer>
+      </div>
+      <FollowNote
+        key={`${lesson.id}-${noteSeed}`}
+        contextKey={lesson.id}
+        defaultOpen={location.hash === '#lesson-notes' || noteSeed > 0}
+        eyebrow="这一课的随读笔记"
+        initialValue={getLessonNote(lesson.id, lesson.eventIds)}
+        onSave={(note) => saveLessonNote(lesson.id, note)}
+        placeholder="记下你的疑问、判断，或这件事与你当下处境的联系。"
+        title={lesson.title}
+      />
     </div>
   );
 }

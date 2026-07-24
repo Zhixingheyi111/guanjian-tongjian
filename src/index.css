@@ -1579,6 +1579,162 @@ a {
   opacity: 1;
 }
 
+.reading-layout {
+  width: 100%;
+}
+
+.follow-note__scrim {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  border: 0;
+  background: rgba(28, 34, 35, 0.34);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.follow-note__scrim.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.follow-note {
+  position: fixed;
+  z-index: 22;
+  left: 50%;
+  bottom: calc(4.85rem + env(safe-area-inset-bottom));
+  width: min(480px, calc(100vw - 1rem));
+  max-height: min(64dvh, 560px);
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid rgba(47, 72, 88, 0.2);
+  border-radius: 7px;
+  background: #fffdf8;
+  box-shadow: 0 18px 60px rgba(31, 42, 45, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(100% + 6rem));
+  visibility: hidden;
+  transition:
+    visibility 0s linear 220ms,
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+.follow-note.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.follow-note__header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.follow-note__mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  background: rgba(143, 53, 38, 0.1);
+  color: var(--cinnabar);
+}
+
+.follow-note__header span,
+.follow-note__header strong {
+  display: block;
+}
+
+.follow-note__header span {
+  color: var(--cinnabar);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.follow-note__header strong {
+  margin-top: 0.12rem;
+  overflow: hidden;
+  font-size: 0.92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.follow-note__close,
+.follow-note__trigger {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(47, 72, 88, 0.18);
+  background: white;
+  color: var(--blue-ink);
+  cursor: pointer;
+}
+
+.follow-note__close {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+}
+
+.follow-note__intro {
+  margin: 0.85rem 0 0.75rem;
+  color: var(--ink-light);
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.follow-note .note-editor textarea {
+  min-height: 220px !important;
+  resize: none;
+  background: #fff;
+}
+
+.follow-note__footer {
+  margin-top: 0.65rem;
+  color: var(--ink-light);
+  font-family: var(--font-sans);
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+
+.follow-note__trigger {
+  position: fixed;
+  z-index: 12;
+  right: max(1rem, calc((100vw - 520px) / 2 + 1rem));
+  bottom: calc(4.95rem + env(safe-area-inset-bottom));
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-color: rgba(143, 53, 38, 0.28);
+  background: var(--cinnabar);
+  color: white;
+  box-shadow: 0 8px 24px rgba(31, 42, 45, 0.24);
+}
+
+.follow-note__trigger > span {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid var(--cinnabar);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.follow-note.is-open ~ .follow-note__trigger {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .lesson-footer {
   display: grid;
   gap: 0.8rem;
@@ -3607,6 +3763,79 @@ a {
   .lesson-position button {
     grid-column: 2;
     grid-row: 1 / 3;
+  }
+
+  .follow-note {
+    right: 1.5rem;
+    bottom: 1.5rem;
+    left: auto;
+    width: 380px;
+    max-height: calc(100dvh - 3rem);
+    transform: translateX(calc(100% + 2rem));
+  }
+
+  .follow-note.is-open {
+    transform: translateX(0);
+  }
+
+  .follow-note__trigger {
+    right: 1.5rem;
+    bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1320px) {
+  .app-viewport:has(.reading-layout) {
+    width: min(1420px, calc(100vw - 3rem));
+  }
+
+  .reading-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 960px) 320px;
+    justify-content: center;
+    align-items: start;
+    gap: 1.5rem;
+  }
+
+  .reading-layout--period {
+    grid-template-columns: minmax(0, 1060px) 310px;
+  }
+
+  .reading-layout > .story-lesson,
+  .reading-layout > .volume-detail-page,
+  .reading-layout > .period-study {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .follow-note__scrim,
+  .follow-note__trigger,
+  .follow-note__close {
+    display: none;
+  }
+
+  .follow-note {
+    position: sticky;
+    z-index: 2;
+    top: 5.2rem;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    max-height: calc(100dvh - 6.5rem);
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    visibility: visible;
+  }
+
+  .follow-note.is-open {
+    transform: none;
+  }
+
+  .follow-note .note-editor textarea {
+    min-height: min(42dvh, 360px) !important;
   }
 }
 

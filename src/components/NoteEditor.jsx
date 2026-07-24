@@ -42,15 +42,27 @@ export default function NoteEditor({ initialValue = '', minHeight = 130, onSave,
     }, DEBOUNCE_MS);
   };
 
+  const flushSave = () => {
+    if (pendingValue.current == null) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    onSaveRef.current(pendingValue.current);
+    pendingValue.current = null;
+    setSaved(true);
+
+    if (hintTimer.current) clearTimeout(hintTimer.current);
+    hintTimer.current = setTimeout(() => setSaved(false), SAVED_HINT_MS);
+  };
+
   return (
     <div className="note-editor">
       <textarea
         value={value}
         onChange={handleChange}
+        onBlur={flushSave}
         placeholder={placeholder}
         style={{ minHeight }}
       />
-      <div className={`note-editor__status ${saved ? 'is-visible' : ''}`}>已保存</div>
+      <div className={`note-editor__status ${saved ? 'is-visible' : ''}`} aria-live="polite">已保存</div>
     </div>
   );
 }

@@ -30,7 +30,13 @@ import {
   listKnowledgeChecksByPeriod,
   listRelationshipsByPeriod,
 } from '../data/tongjian';
-import { getPeriodProgress, savePeriodProgress } from '../utils/storage';
+import {
+  getPeriodNote,
+  getPeriodProgress,
+  savePeriodNote,
+  savePeriodProgress,
+} from '../utils/storage';
+import FollowNote from './FollowNote';
 import { BackButton, Tag } from './ui';
 
 const SECTION_LINKS = [
@@ -196,7 +202,8 @@ function PeriodStudyContent({ periodId, onOpenLesson }) {
   };
 
   return (
-    <article className="period-study">
+    <div className="reading-layout reading-layout--period">
+      <article className="period-study">
       <BackButton onClick={() => navigate('/tongjian')}>返回历史总览</BackButton>
 
       <header className="period-study__hero">
@@ -387,7 +394,17 @@ function PeriodStudyContent({ periodId, onOpenLesson }) {
         </nav>
         <button type="button" onClick={() => navigate('/tongjian')}><ArrowLeft size={16} />返回十阶段总览</button>
       </footer>
-    </article>
+      </article>
+      <FollowNote
+        key={period.id}
+        contextKey={period.id}
+        eyebrow="这个时代的随读笔记"
+        initialValue={getPeriodNote(period.id)}
+        onSave={(note) => savePeriodNote(period.id, note)}
+        placeholder="例如：这个时代最难解决的矛盾是什么？哪些人物关系还没想清楚？"
+        title={period.title}
+      />
+    </div>
   );
 }
 

@@ -6,6 +6,8 @@ import {
   getVolumeById,
   listLessonsByVolume,
 } from '../data/tongjian';
+import { getVolumeNote, saveVolumeNote } from '../utils/storage';
+import FollowNote from './FollowNote';
 import { BackButton, Tag } from './ui';
 
 export default function VolumeDetail({ onOpenLesson }) {
@@ -36,7 +38,8 @@ export default function VolumeDetail({ onOpenLesson }) {
     .filter(Boolean);
 
   return (
-    <div className="page-stack volume-detail-page">
+    <div className="reading-layout reading-layout--volume">
+      <div className="page-stack volume-detail-page">
       <BackButton onClick={() => navigate('/tongjian/volumes')}>返回卷目</BackButton>
 
       <header className="volume-detail-hero">
@@ -109,6 +112,16 @@ export default function VolumeDetail({ onOpenLesson }) {
         <ArrowUpRight size={17} aria-hidden="true" />
         在维基文库核对原书
       </a>
+      </div>
+      <FollowNote
+        key={volume.id}
+        contextKey={volume.id}
+        eyebrow="这一卷的随读笔记"
+        initialValue={getVolumeNote(volume.id)}
+        onSave={(note) => saveVolumeNote(volume.id, note)}
+        placeholder="记下这一卷的主线、关键人物，或准备回头核对的问题。"
+        title={volume.shortTitle}
+      />
     </div>
   );
 }

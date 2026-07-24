@@ -4,12 +4,14 @@ import {
   getBookmarks,
   listEventNotes,
   listLessonNotes,
+  listPeriodNotes,
   listVolumeNotes,
 } from '../utils/storage';
 import {
   getEventById,
   getLessonByEventId,
   getLessonById,
+  getPeriodById,
   getVolumeById,
 } from '../data/tongjian';
 
@@ -26,7 +28,7 @@ function NoteRow({ eyebrow, title, text, onClick }) {
   );
 }
 
-export default function NotesView({ onOpenLesson, onOpenVolume }) {
+export default function NotesView({ onOpenLesson, onOpenPeriod, onOpenVolume }) {
   const lessonNotes = listLessonNotes()
     .map(({ lessonId, note }) => ({ lesson: getLessonById(lessonId), note }))
     .filter(({ lesson }) => lesson);
@@ -39,13 +41,17 @@ export default function NotesView({ onOpenLesson, onOpenVolume }) {
     .map(({ volumeId, note }) => ({ volume: getVolumeById(volumeId), note }))
     .filter(({ volume }) => volume);
 
+  const periodNotes = listPeriodNotes()
+    .map(({ periodId, note }) => ({ period: getPeriodById(periodId), note }))
+    .filter(({ period }) => period);
+
   const savedLessonIds = new Set(getLessonBookmarks());
   getBookmarks().forEach((eventId) => {
     const lesson = getLessonByEventId(eventId);
     if (lesson) savedLessonIds.add(lesson.id);
   });
   const savedLessons = [...savedLessonIds].map((id) => getLessonById(id)).filter(Boolean);
-  const noteCount = lessonNotes.length + legacyEventNotes.length + volumeNotes.length;
+  const noteCount = lessonNotes.length + legacyEventNotes.length + periodNotes.length + volumeNotes.length;
 
   return (
     <div className="page-stack notes-page">
@@ -75,9 +81,20 @@ export default function NotesView({ onOpenLesson, onOpenVolume }) {
             ))}
           </div>
         ) : (
-          <div className="quiet-empty">读故事时选中原文，或在课程末尾写下心得，内容会自动出现在这里。</div>
+          <div className="quiet-empty">读故事时打开随读笔记，或选中原文摘录，内容会自动出现在这里。</div>
         )}
       </section>
+
+      {periodNotes.length > 0 && (
+        <section className="notes-section">
+          <header><NotebookPen size={18} aria-hidden="true" /><h2>时代导读笔记</h2><span>{periodNotes.length}</span></header>
+          <div className="notes-list">
+            {periodNotes.map(({ period, note }) => (
+              <NoteRow key={period.id} eyebrow={period.rangeLabel} title={period.title} text={note} onClick={() => onOpenPeriod(period.id)} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="notes-section">
         <header><Bookmark size={18} aria-hidden="true" /><h2>收藏的故事</h2><span>{savedLessons.length}</span></header>
@@ -94,7 +111,7 @@ export default function NotesView({ onOpenLesson, onOpenVolume }) {
 
       {volumeNotes.length > 0 && (
         <section className="notes-section">
-          <header><NotebookPen size={18} aria-hidden="true" /><h2>旧版卷笔记</h2><span>{volumeNotes.length}</span></header>
+          <header><NotebookPen size={18} aria-hidden="true" /><h2>卷目笔记</h2><span>{volumeNotes.length}</span></header>
           <div className="notes-list">
             {volumeNotes.map(({ volume, note }) => (
               <NoteRow key={volume.id} eyebrow={volume.coverage} title={volume.shortTitle} text={note} onClick={() => onOpenVolume(volume.id)} />

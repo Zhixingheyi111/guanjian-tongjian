@@ -1,6 +1,7 @@
 const KEY_PREFIX = 'tongjian:';
 const EVENT_NOTE_PREFIX = `${KEY_PREFIX}note:event:`;
 const VOLUME_NOTE_PREFIX = `${KEY_PREFIX}note:volume:`;
+const PERIOD_NOTE_PREFIX = `${KEY_PREFIX}note:period:`;
 const BOOKMARK_INDEX_KEY = `${KEY_PREFIX}bookmark:index`;
 const READ_PROGRESS_KEY = `${KEY_PREFIX}read-progress`;
 const LESSON_NOTE_PREFIX = `${KEY_PREFIX}note:lesson:`;
@@ -54,9 +55,18 @@ export function saveVolumeNote(volumeId, note) {
   return safeSet(VOLUME_NOTE_PREFIX + volumeId, note);
 }
 
+export function getPeriodNote(periodId) {
+  const note = safeGet(PERIOD_NOTE_PREFIX + periodId, '');
+  return typeof note === 'string' ? note : '';
+}
+
+export function savePeriodNote(periodId, note) {
+  return safeSet(PERIOD_NOTE_PREFIX + periodId, note);
+}
+
 export function getLessonNote(lessonId, legacyEventIds = []) {
-  const note = safeGet(LESSON_NOTE_PREFIX + lessonId, '');
-  if (typeof note === 'string' && note.trim()) return note;
+  const note = safeGet(LESSON_NOTE_PREFIX + lessonId, null);
+  if (typeof note === 'string') return note;
 
   return legacyEventIds
     .map((eventId) => getEventNote(eventId).trim())
@@ -112,6 +122,22 @@ export function listVolumeNotes() {
     }
   } catch (error) {
     console.error('[storage] enumerate volume notes failed', error);
+  }
+  return notes;
+}
+
+export function listPeriodNotes() {
+  const notes = [];
+  try {
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (!key?.startsWith(PERIOD_NOTE_PREFIX)) continue;
+      const periodId = key.slice(PERIOD_NOTE_PREFIX.length);
+      const note = getPeriodNote(periodId);
+      if (note.trim()) notes.push({ periodId, note });
+    }
+  } catch (error) {
+    console.error('[storage] enumerate period notes failed', error);
   }
   return notes;
 }

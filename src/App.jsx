@@ -78,7 +78,7 @@ export default function App() {
             <Route path="/volume/:volumeId" element={<VolumeDetail onOpenLesson={openLesson} />} />
             <Route path="/consult" element={<ConsultView onOpenLesson={openLesson} />} />
             <Route path="/methods" element={<MethodsView onOpenLesson={openLesson} />} />
-            <Route path="/notes" element={<NotesView onOpenLesson={openLesson} onOpenVolume={openVolume} />} />
+            <Route path="/notes" element={<NotesView onOpenLesson={openLesson} onOpenPeriod={openPeriod} onOpenVolume={openVolume} />} />
             <Route path="*" element={<Navigate to="/tongjian" replace />} />
           </Routes>
         )}
